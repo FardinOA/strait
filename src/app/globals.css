@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+/*
+  Strait palette, from the client's reference: white surfaces, one lime for
+  money arriving, a muted sage for icon discs, and a near-black that carries
+  the weight (buttons, the send card, the night section).
+*/
+@theme inline {
+  --color-page: #f6f7f2;
+  --color-paper: #ffffff;
+  --color-mist: #eef0e9;
+  --color-line: #e6e8e1;
+  --color-line-2: #d3d6cc;
+  --color-ink: #0a0b09;
+  --color-ink-2: #45483f;
+  --color-ink-3: #6b6e64;
+  --color-coal: #16181a;
+
+  --color-lime-50: #f7fde6;
+  --color-lime-100: #eefac8;
+  --color-lime-200: #ddf59a;
+  --color-lime-300: #cbee68;
+  --color-lime-400: #b8e43c;
+  --color-lime-500: #9dcb1f;
+  --color-lime-600: #7aa315;
+  --color-lime-700: #5c7c12;
+  --color-lime-800: #455d13;
+  --color-lime-900: #2e3e0e;
+
+  --color-sage-100: #e3eedd;
+  --color-sage-400: #7fa874;
+  --color-sage-500: #5e8f52;
+  --color-sage-600: #4a7541;
+
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), var(--font-inter), ui-monospace, monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-rise: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-sweep: sweep 6s linear infinite;
+  --animate-ping-soft: ping-soft 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes rise {
+    from { transform: translateY(18px); opacity: 0; filter: blur(6px); }
+    to { transform: none; opacity: 1; filter: none; }
+  }
+  @keyframes sweep {
+    to { rotate: 360deg; }
+  }
+  @keyframes ping-soft {
+    from { transform: scale(1); opacity: 0.6; }
+    to { transform: scale(2.6); opacity: 0; }
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes nudge {
+    0%, 60%, 100% { translate: 0 0; }
+    75% { translate: 2px -2px; }
+  }
+  @keyframes bob {
+    50% { translate: 0 -10px; }
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  background: var(--color-page);
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  font-feature-settings: "cv11", "ss01";
+}
+
+::selection {
+  background: var(--color-lime-300);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* Page container: 1240px with a 16–32px gutter. */
+@utility shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1240px;
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+
+/* Headlines: Inter Tight, semibold and tight, as in the reference. */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+/* Section heads: the reference's light-weight counterpart. */
+@utility type-section {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+/* Lime gradient for the one figure that matters in each view. */
+@utility text-lime-grad {
+  background: linear-gradient(100deg, #8fbf16 0%, #b8e43c 45%, #6e9e3a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft layered shadow for white cards. */
+@utility lift {
+  box-shadow:
+    0 0 0 1px rgb(10 11 9 / 0.06),
+    0 1px 2px rgb(10 11 9 / 0.04),
+    0 12px 32px -12px rgb(10 11 9 / 0.12);
+}
+@utility lift-lg {
+  box-shadow:
+    0 0 0 1px rgb(10 11 9 / 0.06),
+    0 2px 4px rgb(10 11 9 / 0.04),
+    0 30px 60px -24px rgb(10 11 9 / 0.22);
+}
+
+/* Glossy black surface: a faint top sheen and a lime-tinted edge light. */
+@utility gloss {
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgb(184 228 60 / 0.16), transparent 50%),
+    linear-gradient(160deg, #23262a 0%, #0f1012 55%, #0a0b09 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 40px 80px -30px rgb(10 11 9 / 0.55),
+    0 12px 24px -12px rgb(10 11 9 / 0.4);
+}
+
+/* Diagonal hatch for value lost to markup. */
+@utility hatch {
+  background: repeating-linear-gradient(-45deg, rgb(10 11 9 / 0.22) 0 1.5px, transparent 1.5px 6px), var(--color-mist);
+}
+
+@layer components {
+  /*
+    Scroll reveals. Hidden only once JS has marked the page (html.js), so the
+    content never disappears without a script to bring it back. <Motion/>
+    adds .in when an element enters, with a stagger between siblings (--d).
+  */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .reveal {
+      opacity: 0;
+      translate: 0 36px;
+      scale: 0.985;
+      filter: blur(6px);
+      transition:
+        opacity 0.9s var(--ease-out-soft),
+        translate 0.9s var(--ease-out-soft),
+        scale 0.9s var(--ease-out-soft),
+        filter 0.9s var(--ease-out-soft);
+      transition-delay: var(--d, 0ms);
+    }
+    .js .reveal.in { opacity: 1; translate: 0 0; scale: 1; filter: none; }
+
+    /* Headline words rise out of a mask, one after another. */
+    .js .words .w > span {
+      display: inline-block;
+      translate: 0 105%;
+      transition: translate 0.9s var(--ease-out-soft);
+      transition-delay: calc(var(--wi) * 55ms + var(--d, 0ms));
+    }
+    .js .words.in .w > span { translate: 0 0; }
+
+    /* Table rows and list items cascade in once their parent is seen. */
+    .js .cascade > * {
+      opacity: 0;
+      translate: 0 14px;
+      transition: opacity 0.6s var(--ease-out-soft), translate 0.6s var(--ease-out-soft), background-color 0.3s;
+      transition-delay: calc(var(--i, 0) * 60ms);
+    }
+    .js .cascade.in > * { opacity: 1; translate: 0 0; }
+  }
+  .words .w { display: inline-block; overflow: clip; overflow-clip-margin: 0.12em; vertical-align: top; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+
+  /* Cursor spotlight on cards: a soft lime light follows the pointer (--sx/--sy from <Motion/>). */
+  .spot { isolation: isolate; }
+  .spot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(420px circle at var(--sx, 50%) var(--sy, -40%), rgb(221 245 154 / 0.55), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .spot:hover::before { opacity: 1; }
+  .spot-dark::before { background: radial-gradient(380px circle at var(--sx, 50%) var(--sy, -40%), rgb(184 228 60 / 0.16), transparent 45%); }
+
+  /* Hero stage: the cards straighten as you scroll (--p) and tilt toward the pointer (--tx/--ty). */
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .float-l {
+      transform: perspective(1200px) translateY(calc(var(--p, 0) * -40px)) rotate(calc(-3deg + var(--p, 0) * 3deg)) rotateY(calc(var(--tx, 0) * 7deg)) rotateX(calc(var(--ty, 0) * -6deg));
+      transition: transform 0.6s var(--ease-out-soft);
+    }
+    .float-r {
+      transform: perspective(1200px) translateY(calc(var(--p, 0) * -70px)) rotate(calc(2deg - var(--p, 0) * 2deg)) rotateY(calc(var(--tx, 0) * 7deg)) rotateX(calc(var(--ty, 0) * -6deg));
+      transition: transform 0.6s var(--ease-out-soft);
+    }
+  }
+
+  /* A value that just changed gives a small bounce. */
+  .pop { animation: pop 0.5s var(--ease-spring); }
+  @keyframes pop {
+    40% { scale: 1.035; }
+  }
+
+  /* Range input: thin ink track, lime fill, white thumb. */
+  .anchor-range {
+    appearance: none;
+    width: 100%;
+    height: 28px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .anchor-range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--color-lime-400) var(--fill, 50%), var(--color-mist) var(--fill, 50%));
+  }
+  .anchor-range::-moz-range-track { height: 6px; border-radius: 999px; background: var(--color-mist); }
+  .anchor-range::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--color-lime-400); }
+  .anchor-range::-webkit-slider-thumb {
+    appearance: none;
+    margin-top: -8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 6px solid var(--color-ink);
+    background: var(--color-paper);
+    box-shadow: 0 6px 14px -4px rgb(10 11 9 / 0.45);
+    transition: scale 0.2s var(--ease-spring);
+  }
+  .anchor-range::-moz-range-thumb { width: 10px; height: 10px; border-radius: 999px; border: 6px solid var(--color-ink); background: var(--color-paper); }
+  .anchor-range:hover::-webkit-slider-thumb { scale: 1.1; }
+  .anchor-range:focus-visible { outline: none; }
+  .anchor-range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--color-ink); outline-offset: 3px; }
+
+  /* Tracking timeline steps fill in one after another once in view. */
+  .track-step {
+    opacity: 0.35;
+    transition: opacity 0.5s var(--ease-out-soft);
+    transition-delay: calc(var(--i) * 450ms);
+  }
+  .track-step .track-dot {
+    background: var(--color-paper);
+    transition: background-color 0.4s, box-shadow 0.4s;
+    transition-delay: calc(var(--i) * 450ms);
+  }
+  .track-on .track-step { opacity: 1; }
+  .track-on .track-step .track-dot { background: var(--color-lime-400); box-shadow: 0 0 0 5px rgb(184 228 60 / 0.25); }
+  .track-rail { transform: scaleY(0); transform-origin: top; transition: transform 1.8s var(--ease-out-soft); }
+  .track-on .track-rail { transform: scaleY(1); }
+
+  /* Radar sweep in the night section. */
+  .radar {
+    background: conic-gradient(from 0deg, rgb(184 228 60 / 0.32) 0deg, rgb(184 228 60 / 0.06) 40deg, transparent 60deg, transparent 360deg);
+  }
+
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq[open] .faq-plus::after { rotate: 90deg; opacity: 0; }
+  .faq::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size 0.4s var(--ease-out-soft), content-visibility 0.4s allow-discrete;
+  }
+  .faq[open]::details-content { block-size: auto; }
+}
+
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+}
